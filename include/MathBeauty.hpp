@@ -4,11 +4,11 @@
 
 #include <assert.h>
 
+const int SCREEN_LENGTH = 1920;
+const int SCREEN_WIDTH  = 1080;
+
 const int WINDOW_LENGTH = 768;
 const int WINDOW_WIDTH  = 512;
-
-const int WINDOW_LENGTH = 1200;
-const int WINDOW_WIDTH  = 800;
 
 const float ZERO_POINT_X = 2 * WINDOW_LENGTH / 3;
 const float ZERO_POINT_Y = WINDOW_WIDTH / 2;

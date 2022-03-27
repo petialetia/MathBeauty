@@ -1,4 +1,4 @@
-#include "MathBeauty.hpp"
+#include "../include/MathBeauty.hpp"
 
 int main ()
 {

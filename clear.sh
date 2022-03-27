@@ -1,2 +1,2 @@
 rm -rf build
-rm MathBeauty.out
+rm -rf bin
