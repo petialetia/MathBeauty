@@ -5,8 +5,8 @@ int main ()
     sdl_window_info win_info {};
     OpenWindowWithSurface (&win_info);
 
-    screen_info scr_info = {(SCREEN_LENGTH/2 - ZERO_POINT_X)/START_SCALE, (SCREEN_WIDTH/2 - ZERO_POINT_Y)/START_SCALE, 1/START_SCALE};
-    SDL_Event event = {};
+    screen_info scr_info = {(WINDOW_LENGTH/2 - ZERO_POINT_X)/START_SCALE, (WINDOW_WIDTH/2 - ZERO_POINT_Y)/START_SCALE, 1/START_SCALE};
+    SDL_Event event;
 
     bool is_programm_ended = false;
 
@@ -21,8 +21,10 @@ void OpenWindowWithSurface (sdl_window_info* win_info)
 {
     assert (win_info != nullptr);
 
-    win_info->window = SDL_CreateWindow ("Mandelbrot", (1920 - SCREEN_LENGTH)/2, (1080 - SCREEN_WIDTH)/2, SCREEN_LENGTH, SCREEN_WIDTH, SDL_WINDOW_MAXIMIZED);
+    win_info->window = SDL_CreateWindow ("Mandelbrot", (SCREEN_LENGTH - WINDOW_LENGTH)/2, (SCREEN_WIDTH - WINDOW_WIDTH)/2, WINDOW_LENGTH, WINDOW_WIDTH, SDL_WINDOW_MAXIMIZED);
     assert (win_info->window != nullptr);
+
+    SDL_SetWindowSize (win_info->window, WINDOW_LENGTH, WINDOW_WIDTH);
 
     win_info->surface = SDL_GetWindowSurface (win_info->window);
     assert (win_info->surface != nullptr); 
@@ -35,6 +37,7 @@ void DrawFrame (sdl_window_info* win_info, screen_info* scr_info)
 
     clock_t start_time = clock ();
 
+    win_info->surface = SDL_GetWindowSurface (win_info->window);
     CalculateMandelbrot (win_info, scr_info);
     SDL_UpdateWindowSurface (win_info->window);
 
@@ -53,13 +56,13 @@ void CalculateMandelbrot (sdl_window_info* win_info, screen_info* scr_info)
 
     __m256 offset_x_vector = _mm256_setr_ps (0, step_x, step_x * 2, step_x * 3, step_x * 4, step_x * 5, step_x * 6, step_x * 7);
 
-    float start_y = scr_info->center_pixel_y + SCREEN_WIDTH * scr_info->scale / 2;
+    float start_y = scr_info->center_pixel_y + WINDOW_WIDTH * scr_info->scale / 2;
 
-    for (int i_y = 0; i_y < SCREEN_WIDTH; i_y++, start_y -= step_y)
+    for (int i_y = 0; i_y < WINDOW_WIDTH; i_y++, start_y -= step_y)
     {
-        float start_x = scr_info->center_pixel_x - SCREEN_LENGTH * scr_info->scale / 2; 
+        float start_x = scr_info->center_pixel_x - WINDOW_LENGTH * scr_info->scale / 2; 
 
-        for (int i_x = 0; i_x < SCREEN_LENGTH; i_x += VECTOR_SIZE, start_x += VECTOR_SIZE * step_x)
+        for (int i_x = 0; i_x < WINDOW_LENGTH; i_x += VECTOR_SIZE, start_x += VECTOR_SIZE * step_x)
         {
             __m256 start_x_vector = _mm256_set1_ps (start_x);
                    start_x_vector = _mm256_add_ps (start_x_vector, offset_x_vector);
@@ -137,20 +140,20 @@ void CheckEvent (sdl_window_info* win_info, screen_info* scr_info, SDL_Event* ev
     assert (is_programm_ended != nullptr);
 
     while (SDL_PollEvent (event))
+    {
+        if (event->type == SDL_QUIT) 
         {
-            if (event->type == SDL_QUIT) 
+            ProcessEndEvent (win_info, is_programm_ended);
+        }
+        else 
+        {
+            if (event->type == SDL_KEYDOWN)
             {
-                ProcessEndEvent (win_info, is_programm_ended);
-            }
-            else 
-            {
-                if (event->type == SDL_KEYDOWN)
-                {
-                    if (event->key.keysym.scancode == SDL_SCANCODE_ESCAPE) ProcessEndEvent (win_info, is_programm_ended);
-                    else MoveSet (event, scr_info);
-                }
+                if (event->key.keysym.scancode == SDL_SCANCODE_ESCAPE) ProcessEndEvent (win_info, is_programm_ended);
+                else MoveSet (event, scr_info);
             }
         }
+    }
 }
 
 void ProcessEndEvent (sdl_window_info* win_info, bool* is_programm_ended)

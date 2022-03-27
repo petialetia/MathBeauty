@@ -2,16 +2,18 @@
 #include <time.h>
 #include <SDL2/SDL.h>
 
-//#define NDEBUG //Отключает ассерты
 #include <assert.h>
 
-const int SCREEN_LENGTH = 768;//1200;
-const int SCREEN_WIDTH  = 512;//800;
+const int WINDOW_LENGTH = 768;
+const int WINDOW_WIDTH  = 512;
 
-const float ZERO_POINT_X = 2 * SCREEN_LENGTH / 3;
-const float ZERO_POINT_Y = SCREEN_WIDTH / 2;
+const int WINDOW_LENGTH = 1200;
+const int WINDOW_WIDTH  = 800;
 
-const float START_SCALE = SCREEN_WIDTH / 2;
+const float ZERO_POINT_X = 2 * WINDOW_LENGTH / 3;
+const float ZERO_POINT_Y = WINDOW_WIDTH / 2;
+
+const float START_SCALE = WINDOW_WIDTH / 2;
 
 const float SCALE_INCREASING = 1.1;
 const int VERTICAL_MOVEMENT_OFFSET = 10;
@@ -26,8 +28,8 @@ const int VECTOR_SIZE = 8;
 
 struct sdl_window_info
 {
-    SDL_Window*   window   = nullptr;
-    SDL_Surface*  surface  = nullptr;
+    SDL_Window*  window   = nullptr;
+    SDL_Surface* surface  = nullptr;
 };
 
 struct screen_info

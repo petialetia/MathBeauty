@@ -10,7 +10,7 @@ include_directories(MathBeauty ${SDL2_INCLUDE_DIRS})
 set(CMAKE_EXECUTABLE_SUFFIX ".out")
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 
-set(CMAKE_CXX_FLAGS "-mavx2 -Wall -Wextra -pedantic -O3")
+set(CMAKE_CXX_FLAGS "-mavx2 -D NDEBUG -Wall -Wextra -pedantic -O3")
 #set(GCC_COVERAGE_LINK_FLAGS "-mavx2 -lSDL2 -Wpsabi")
 
 add_executable(MathBeauty MathBeauty.cpp)
